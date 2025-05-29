@@ -13,6 +13,8 @@ class Drivers(models.Model):
     highest_grid_position = models.CharField(max_length=20)
     date_birth = models.CharField(max_length=50)
     place_birth = models.CharField(max_length=100)
+    creation_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
     
     def __str__(self):
         return (self.driver)

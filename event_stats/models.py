@@ -14,6 +14,8 @@ class Event(models.Model):
     circuit_lenght = models.CharField(max_length=300)
     race_distance = models.CharField(max_length=300)
     lap_record = models.CharField(max_length=300)
+    creation_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
 
 def __str__(self):
          return f"{self.event} - {self.country}"
