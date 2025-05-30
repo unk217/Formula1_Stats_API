@@ -13,6 +13,9 @@ create virtualenv
   python -m venv venv
   ./venv/Scripts/activate
 ```
+```bash
+  ./venv/Scripts/activate
+```
  install requirements   
  ```bash
   pip install -r requirements.txt
