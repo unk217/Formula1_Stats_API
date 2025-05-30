@@ -24,7 +24,7 @@ migrations
   python manage.py makemigrations
 ```
  ```bash
-  python manage.py maigrate
+  python manage.py migrate
 ```
 run scraper
  ```bash
