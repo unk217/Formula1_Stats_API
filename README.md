@@ -11,7 +11,6 @@ create virtualenv
 
 ```bash
   python -m venv venv
-  ./venv/Scripts/activate
 ```
 ```bash
   ./venv/Scripts/activate
