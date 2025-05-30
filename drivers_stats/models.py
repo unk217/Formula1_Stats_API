@@ -8,7 +8,7 @@ class Drivers(models.Model):
     podiums = models.IntegerField(blank=False)
     points = models.FloatField(blank=False)
     gp_entered = models.IntegerField(blank=False)
-    worl_championships = models.IntegerField(blank=False)
+    world_championships = models.IntegerField(blank=False)
     highest_race_finish = models.CharField(max_length=20)
     highest_grid_position = models.CharField(max_length=20)
     date_birth = models.CharField(max_length=50)
