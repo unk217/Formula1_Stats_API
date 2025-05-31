@@ -7,6 +7,16 @@ API con informacion scrapeada de la web de la F1
 
 ## Installation
 
+Clone the project
+
+```bash
+  git clone https://link-to-project
+```
+Go to the project directory
+
+```bash
+  cd my-project
+```
 create virtualenv
 
 ```bash
