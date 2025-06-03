@@ -3,7 +3,8 @@ from django.db import models
 # Create your models here.
 
 class Event(models.Model):
-        
+    
+    round = models.IntegerField(blank=False)
     event = models.CharField(max_length=300)
     country = models.CharField(max_length=300)
     circuit = models.CharField(max_length=300)

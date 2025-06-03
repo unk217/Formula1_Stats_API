@@ -23,6 +23,7 @@ def save_event(event):
     Event.objects.update_or_create(
                     event = event["event"],
                     defaults= {
+                        "round": event["round"],
                         "country": event["country"],
                         "circuit": event["circuit"],
                         "city": event["city"],
@@ -39,11 +40,20 @@ async def scrape_page(page, browser, url):
     await page.goto(url)
     circuits = []
 
-    circuits_links = await page.query_selector_all("a.group[href^='/en/racing/2025/']")
-    for link in circuits_links:
-
+    circuits_links = page.locator("a.group[href^='/en/racing/2025/']")
+    count = await circuits_links.count()
+    print(f"Total events found: {count}")
+    
+    for i in range(count):
+        link = circuits_links.nth(i)
+        rounds = await link.locator("p.f1-text.font-titillium.tracking-normal.font-bold.non-italic.uppercase.leading-snug.f1-text__micro.text-fs-15px.text-brand-primary").inner_text()
+        match = re.search(r"\d+", rounds)
+        if match:
+            rounds = int(match.group())
+        else:
+            rounds = None
         circuits_href = await link.get_attribute("href")
-        
+        print(round)
         if circuits_href:
             
             if "pre-season-testing" in circuits_href.lower():
@@ -54,15 +64,15 @@ async def scrape_page(page, browser, url):
             print(f"Scraping URL: {circuit_url}")
             
             try:
-                event_details = await scrape_details(browser, circuit_url)
+                event_details = await scrape_details(browser, circuit_url, rounds)
                 circuits.append(event_details)
                 print(event_details)
             except Exception as e:
                 print(f"Failed to scrape at {circuit_url}: {e}")
                 print(circuit_url)
-    return circuits  
+    return circuits 
 
-async def scrape_details(browser, circuit_url):
+async def scrape_details(browser, circuit_url, rounds):
     
     page = await browser.new_page()
     await page.goto(circuit_url)
@@ -104,6 +114,8 @@ async def scrape_details(browser, circuit_url):
     
     return {
         "event": event.strip() if event else None,
+        # "podiums": int(podiums.strip()) if podiums and podiums.isdigit() else None,
+        "round": int(rounds) if rounds else None,
         "country": country.strip() if country else None,
         "circuit": circuit.strip() if circuit else None,
         "city": city.strip() if city else None,
