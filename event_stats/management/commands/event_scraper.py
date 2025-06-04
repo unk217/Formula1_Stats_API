@@ -53,7 +53,7 @@ async def scrape_page(page, browser, url):
         else:
             rounds = None
         circuits_href = await link.get_attribute("href")
-        print(round)
+    
         if circuits_href:
             
             if "pre-season-testing" in circuits_href.lower():
@@ -114,7 +114,6 @@ async def scrape_details(browser, circuit_url, rounds):
     
     return {
         "event": event.strip() if event else None,
-        # "podiums": int(podiums.strip()) if podiums and podiums.isdigit() else None,
         "round": int(rounds) if rounds else None,
         "country": country.strip() if country else None,
         "circuit": circuit.strip() if circuit else None,

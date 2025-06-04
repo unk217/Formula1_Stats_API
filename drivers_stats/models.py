@@ -3,10 +3,12 @@ from django.db import models
 # Create your models here.
 class Drivers(models.Model):
     driver = models.CharField(max_length=300)
+    driver_number = models.CharField(max_length=4)
     team = models.CharField(max_length=300)
     country = models.CharField(max_length=300)
     podiums = models.IntegerField(blank=False)
-    points = models.FloatField(blank=False)
+    season_points = models.FloatField(blank=False)
+    total_points = models.FloatField(blank=False)
     gp_entered = models.IntegerField(blank=False)
     world_championships = models.IntegerField(blank=False)
     highest_race_finish = models.CharField(max_length=20)
