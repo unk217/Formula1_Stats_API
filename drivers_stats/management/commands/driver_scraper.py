@@ -1,5 +1,6 @@
 import asyncio
 from playwright.async_api import async_playwright
+from datetime import datetime
 
 # imports django
 import django
@@ -43,7 +44,7 @@ async def scrape_page(page, browser, url):
     
     for i in range(count):
         link = drivers_links.nth(i)
-        season_points = await link.locator("p.f1-heading-wide.font-formulaOneWide.tracking-normal.font-normal.non-italic.text-fs-18px.leading-none.normal-case").inner_text()
+        season_points = await link.locator("p.f1-heading-wide.font-formulaOneWide.tracking-normal.font-normal.non-italic.text-fs-18px.leading-none.normal-case").inner_text( )
         drivers_href = await link.get_attribute("href")
          
         if drivers_href:          
@@ -90,7 +91,7 @@ async def scrape_details(browser, driver_url, season_points):
         "world_championships": int(world_championships.strip()) if world_championships and world_championships.isdigit() else None,
         "highest_race_finish": highest_race_finish.strip() if highest_race_finish else None,
         "highest_grid_position": highest_grid_position.strip() if highest_grid_position else None,
-        "date_birth": date_birth.strip() if date_birth else None,
+        "date_birth": datetime.strptime(date_birth.strip(), "%d/%m/%Y").date() if date_birth else None,
         "place_birth": place_birth.strip() if place_birth else None
     }
 
@@ -111,7 +112,8 @@ async def main():
             drivers = await scrape_page(page, browser, url)
             for driver in drivers:
                 await save_driver(driver)
-            print("Saved successfully on DB")    
+            print("Saved successfully on DB")
+            print(f"Hora {datetime.now()}")   
             all_drivers.extend(drivers)
         except Exception as e:
             print(f"Failed to scrape page {url}: {e}")

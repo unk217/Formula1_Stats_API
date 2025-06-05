@@ -13,7 +13,7 @@ class Drivers(models.Model):
     world_championships = models.IntegerField(blank=False)
     highest_race_finish = models.CharField(max_length=20)
     highest_grid_position = models.CharField(max_length=20)
-    date_birth = models.CharField(max_length=50)
+    date_birth = models.DateField(null=True, blank=True)
     place_birth = models.CharField(max_length=100)
     creation_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
