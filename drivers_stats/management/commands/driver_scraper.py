@@ -1,6 +1,7 @@
 import asyncio
 from playwright.async_api import async_playwright
 from datetime import datetime
+import time
 
 # imports django
 import django
@@ -50,6 +51,7 @@ async def scrape_page(page, browser, url):
         if drivers_href:          
             driver_url = BASE_URL + drivers_href  #driver_url
             print(f"Scraping URL: {driver_url}")
+            
             
             try:
                 driver_details = await scrape_details(browser, driver_url, season_points)
@@ -108,12 +110,17 @@ async def main():
         
 
         try:
+            start_time = time.time()
+            print(f"Hora {start_time}")
             print(f"Scraping page: {url}")
+            
             drivers = await scrape_page(page, browser, url)
             for driver in drivers:
                 await save_driver(driver)
+            end_time = time.time()
+            elapsed_time = end_time - start_time    
             print("Saved successfully on DB")
-            print(f"Hora {datetime.now()}")   
+            print(f"execution time {elapsed_time:.2f} seconds, {elapsed_time/60:.2f} minutes")   
             all_drivers.extend(drivers)
         except Exception as e:
             print(f"Failed to scrape page {url}: {e}")
