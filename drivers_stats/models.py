@@ -1,4 +1,6 @@
 from django.db import models
+import datetime
+from dateutil.relativedelta import relativedelta
 
 # Create your models here.
 class Drivers(models.Model):
@@ -17,6 +19,11 @@ class Drivers(models.Model):
     place_birth = models.CharField(max_length=100)
     creation_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+    
+    def driver_age(self):
+        today = datetime.date.today()
+        delta = relativedelta(today, self.date_birth)
+        return f"{delta.years} years"
     
     def __str__(self):
         return (self.driver)
