@@ -6,3 +6,5 @@ from event_stats.models import Event
 class EventViewSet(viewsets.ModelViewSet):
     queryset = Event.objects.all()
     serializer_class = EventSerializer
+    http_method_names = ['get']
+# This viewset provides the default `list`, `create`, `retrieve`, `update`, and `destroy` actions.
