@@ -42,6 +42,7 @@ BASE_APPS = [
 OWN_APPS = [
     'event_stats',
     'drivers_stats',
+    'teams_stats',
     'core',
 ]
 
