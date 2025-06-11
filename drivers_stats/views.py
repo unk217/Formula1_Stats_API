@@ -1,4 +1,4 @@
-from rest_framework.viewsets import ReadOnlyModelViewSet, ModelViewSet
+from rest_framework.viewsets import ModelViewSet
 from drivers_stats.serializer import DriverSerializer
 from drivers_stats.models import Drivers
 

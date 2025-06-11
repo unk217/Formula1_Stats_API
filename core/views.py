@@ -11,4 +11,5 @@ class APIRootView(APIView):
         return Response({
         "drivers": request.build_absolute_uri("drivers"),
         "events": request.build_absolute_uri("events"),
+        "teams": request.build_absolute_uri("teams"),
     })
