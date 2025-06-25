@@ -40,27 +40,28 @@ async def scrape_page(page, browser, url):
     await page.goto(url)
     circuits = []
 
-    circuits_links = page.locator("a.group[href^='/en/racing/2025/']")
+    circuits_links = page.locator('a[class="group"]')
     count = await circuits_links.count()
     print(f"Total events found: {count}")
     
     for i in range(count):
         link = circuits_links.nth(i)
-        rounds = await link.locator("p.f1-text.font-titillium.tracking-normal.font-bold.non-italic.uppercase.leading-snug.f1-text__micro.text-fs-15px.text-brand-primary").inner_text()
+        rounds = await link.locator('span[class^="typography-module_body-2-xs-bold__M03Ei"]').inner_text()
         match = re.search(r"\d+", rounds)
         if match:
             rounds = int(match.group())
+            
         else:
             rounds = None
         circuits_href = await link.get_attribute("href")
-    
+        print(circuits_href)
         if circuits_href:
             
             if "pre-season-testing" in circuits_href.lower():
                 print(f"Skipping pre-season-testing: {circuits_href}")
                 continue
                      
-            circuit_url = BASE_URL + circuits_href + CIRCUIT_URL
+            circuit_url = BASE_URL + circuits_href
             print(f"Scraping URL: {circuit_url}")
             
             try:
@@ -77,16 +78,16 @@ async def scrape_details(browser, circuit_url, rounds):
     page = await browser.new_page()
     await page.goto(circuit_url)
     
-    event = await page.locator("xpath=/html/body/main/div[2]/div/div[1]/div[1]/p").text_content()
-    country = await page.locator("xpath=/html/body/main/div[1]/section/div/h1").text_content()
-    circuit = await page.locator("xpath=/html/body/main/div[2]/div/div[2]/div/div[1]/div[1]/h2").text_content()
-    city = await page.locator("xpath=/html/body/main/div[2]/div/div[3]/div/div[1]/section/div/h2[1]").text_content()
-    date = await page.locator("xpath=/html/body/main/div[1]/section/div/span").text_content()
-    first_gp = await page.locator("xpath=/html/body/main/div[2]/div/div[2]/div/div[2]/div[2]/div/div[1]/div/div[1]/h2").text_content()
-    number_laps = await page.locator("xpath=/html/body/main/div[2]/div/div[2]/div/div[2]/div[2]/div/div[1]/div/div[2]/h2").text_content()
-    circuit_lenght = await page.locator("xpath=/html/body/main/div[2]/div/div[2]/div/div[2]/div[2]/div/div[1]/div/div[3]/h2").text_content()
-    race_distance = await page.locator("xpath=/html/body/main/div[2]/div/div[2]/div/div[2]/div[2]/div/div[1]/div/div[4]/h2").text_content()
-    lap_record = await page.locator("xpath=/html/body/main/div[2]/div/div[2]/div/div[2]/div[2]/div/div[1]/div/div[5]/h2").text_content()
+    event = await page.locator("xpath=/html/body/div[1]/main/div/div[1]/span/span/span[3]/span/h1").text_content()
+    #country = await page.locator("xpath=/html/body/main/div[1]/section/div/h1").text_content()
+    #circuit = await page.locator("xpath=/html/body/main/div[2]/div/div[2]/div/div[1]/div[1]/h2").text_content()
+    #city = await page.locator("xpath=/html/body/main/div[2]/div/div[3]/div/div[1]/section/div/h2[1]").text_content()
+    #date = await page.locator("xpath=/html/body/main/div[1]/section/div/span").text_content()
+    first_gp = await page.locator("xpath=/html/body/div[1]/main/div/div[3]/div/div/div/div[2]/div[2]/dl/div[2]/dd[1]").text_content()
+    number_laps = await page.locator("xpath=/html/body/div[1]/main/div/div[3]/div/div/div/div[2]/div[2]/dl/div[3]/dd").text_content()
+    circuit_lenght = await page.locator("xpath=/html/body/div[1]/main/div/div[3]/div/div/div/div[2]/div[2]/dl/div[1]/dd").text_content()
+    race_distance = await page.locator("xpath=/html/body/div[1]/main/div/div[3]/div/div/div/div[2]/div[2]/dl/div[5]/dd").text_content()
+    lap_record = await page.locator("xpath=/html/body/div[1]/main/div/div[3]/div/div/div/div[2]/div[2]/dl/div[4]/dd").text_content()
     
     
     
@@ -94,8 +95,8 @@ async def scrape_details(browser, circuit_url, rounds):
     
      # --- Transformaciones de datos ---
     # Para 'date': Quitar espacios extra y normalizar
-    if date:
-        date = " ".join(date.strip().split()) # Esto divide por cualquier espacio y une con un solo espacio
+    """ if date:
+        date = " ".join(date.strip().split()) """ # Esto divide por cualquier espacio y une con un solo espacio
     
     # Para 'lap_record': Añadir un espacio entre el tiempo y el nombre
     if lap_record:
@@ -115,10 +116,7 @@ async def scrape_details(browser, circuit_url, rounds):
     return {
         "event": event.strip() if event else None,
         "round": int(rounds) if rounds else None,
-        "country": country.strip() if country else None,
-        "circuit": circuit.strip() if circuit else None,
-        "city": city.strip() if city else None,
-        "date": date.strip() if date else None,
+        
         "first_gp": first_gp.strip() if first_gp else None,
         "number_laps": number_laps.strip() if number_laps else None,
         "circuit_lenght": circuit_lenght.strip() if circuit_lenght else None,
@@ -127,12 +125,17 @@ async def scrape_details(browser, circuit_url, rounds):
         
         
     }
+    """ "country": country.strip() if country else None,
+    "circuit": circuit.strip() if circuit else None,
+    "city": city.strip() if city else None,
+    "date": date.strip() if date else None, """
 
 async def main():
     async with async_playwright() as p:
-        brave_path = "C:\\Program Files\\BraveSoftware\\Brave-Browser\\Application\\brave.exe"
+        #brave_path = "C:\\Program Files\\BraveSoftware\\Brave-Browser\\Application\\brave.exe"
+        brave_path = "/usr/bin/brave-browser"
         browser = await p.chromium.launch(
-            headless=True,
+            headless=False,
             executable_path=brave_path
         )
         page = await browser.new_page()

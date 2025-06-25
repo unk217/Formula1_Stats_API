@@ -39,7 +39,7 @@ async def scrape_page(page, browser, url):
     await page.goto(url)
     drivers = []
 
-    drivers_links = page.locator("a.group[href^='/en/drivers/']")
+    drivers_links = page.locator('a[data-f1rd-a7s-click="driver_card_click"]')
     count = await drivers_links.count()
     print(f"Total drivers found: {count}")
     
@@ -99,9 +99,10 @@ async def scrape_details(browser, driver_url, season_points):
 
 async def main():
     async with async_playwright() as p:
-        brave_path = "C:\\Program Files\\BraveSoftware\\Brave-Browser\\Application\\brave.exe"
+        #brave_path = "C:\\Program Files\\BraveSoftware\\Brave-Browser\\Application\\brave.exe"
+        brave_path = "/usr/bin/brave-browser"
         browser = await p.chromium.launch(
-            headless=True,
+            headless=False,
             executable_path=brave_path
         )
         page = await browser.new_page()
