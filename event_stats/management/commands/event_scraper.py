@@ -46,7 +46,7 @@ async def scrape_page(page, browser, url):
     
     for i in range(count):
         link = circuits_links.nth(i)
-        rounds = await link.locator('span[class^="typography-module_body-2-xs-bold__M03Ei"]').inner_text()
+        rounds = await link.locator('span[class^="typography-module_body-2-xs-bold__M03Ei text"]').inner_text()
         match = re.search(r"\d+", rounds)
         if match:
             rounds = int(match.group())
@@ -135,7 +135,7 @@ async def main():
         #brave_path = "C:\\Program Files\\BraveSoftware\\Brave-Browser\\Application\\brave.exe"
         brave_path = "/usr/bin/brave-browser"
         browser = await p.chromium.launch(
-            headless=False,
+            headless=True,
             executable_path=brave_path
         )
         page = await browser.new_page()
