@@ -1,8 +1,10 @@
 from rest_framework import serializers
 from drivers_stats.models import Drivers
 
+
 class DriverSerializer(serializers.ModelSerializer):
     age = serializers.ReadOnlyField(source='driver_age')
+
     class Meta:
         model = Drivers
         fields = (
@@ -10,10 +12,11 @@ class DriverSerializer(serializers.ModelSerializer):
             'driver',
             'driver_number',
             'team',
+            'driver_picture',
             'country',
             'podiums',
             'season_points',
-            'total_points',
+            'career_points',
             'gp_entered',
             'world_championships',
             'highest_race_finish',
@@ -21,4 +24,4 @@ class DriverSerializer(serializers.ModelSerializer):
             'date_birth',
             'age',
             'place_birth',
-            )
+        )

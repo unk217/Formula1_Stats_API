@@ -4,4 +4,5 @@ from .views import EventViewSet
 
 routers = routers.DefaultRouter()
 routers.register(r'', EventViewSet, basename='events')
+
 urlpatterns = routers.urls

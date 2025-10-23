@@ -1,9 +1,9 @@
-from rest_framework import viewsets
+from rest_framework.viewsets import ModelViewSet
 from event_stats.serializer import EventSerializer
 from event_stats.models import Event
 
 # Create your views here.
-class EventViewSet(viewsets.ModelViewSet):
+class EventViewSet(ModelViewSet):
     queryset = Event.objects.all()
     serializer_class = EventSerializer
     http_method_names = ['get']

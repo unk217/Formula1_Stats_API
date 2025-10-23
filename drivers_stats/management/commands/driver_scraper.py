@@ -23,9 +23,10 @@ def save_driver(driver):
             "team": driver["team"],
             "driver_number": driver["driver_number"],
             "country": driver["country"],
+            "driver_picture": driver["driver_picture"],
             "podiums": driver["podiums"],
             "season_points": driver["season_points"],
-            "total_points": driver["total_points"],
+            "career_points": driver["career_points"],
             "gp_entered": driver["gp_entered"],
             "world_championships": driver["world_championships"],
             "highest_race_finish": driver["highest_race_finish"],
@@ -45,7 +46,7 @@ async def scrape_page(page, browser, url):
     
     for i in range(count):
         link = drivers_links.nth(i)
-        season_points = await link.locator("p.f1-heading-wide.font-formulaOneWide.tracking-normal.font-normal.non-italic.text-fs-18px.leading-none.normal-case").inner_text( )
+        #season_points = await link.locator("p.f1-heading-wide.font-formulaOneWide.tracking-normal.font-normal.non-italic.text-fs-18px.leading-none.normal-case").inner_text( )
         drivers_href = await link.get_attribute("href")
          
         if drivers_href:          
@@ -54,30 +55,32 @@ async def scrape_page(page, browser, url):
             
             
             try:
-                driver_details = await scrape_details(browser, driver_url, season_points)
+                driver_details = await scrape_details(browser, driver_url)
                 drivers.append(driver_details)
                 print(driver_details)
             except Exception as e:
                 print(f"Failed to scrape at {driver_url}: {e}") 
     return drivers
 
-async def scrape_details(browser, driver_url, season_points):
+async def scrape_details(browser, driver_url):
     
     page = await browser.new_page()
     await page.goto(driver_url)
     
-    driver = await page.locator("xpath=/html/body/main/div/div/div/div[1]/figure/figcaption/div/h1").text_content()
-    driver_number = await page.locator("xpath=/html/body/main/div/div/div/div[1]/figure/figcaption/div/div/p").text_content()
-    team = await page.locator("xpath=/html/body/main/div/div/div/div[1]/div/div[2]/dl/dd[1]").text_content()
-    country = await page.locator("xpath=/html/body/main/div/div/div/div[1]/div/div[2]/dl/dd[2]").text_content()
-    podiums = await page.locator("xpath=/html/body/main/div/div/div/div[1]/div/div[2]/dl/dd[3]").text_content()
-    total_points = await page.locator("xpath=/html/body/main/div/div/div/div[1]/div/div[2]/dl/dd[4]").text_content()
-    gp_entered = await page.locator("xpath=/html/body/main/div/div/div/div[1]/div/div[2]/dl/dd[5]").text_content()
-    world_championships = await page.locator("xpath=/html/body/main/div/div/div/div[1]/div/div[2]/dl/dd[6]").text_content()
-    highest_race_finish = await page.locator("xpath=/html/body/main/div/div/div/div[1]/div/div[2]/dl/dd[7]").text_content()
-    highest_grid_position = await page.locator("xpath=/html/body/main/div/div/div/div[1]/div/div[2]/dl/dd[8]").text_content()
-    date_birth = await page.locator("xpath=/html/body/main/div/div/div/div[1]/div/div[2]/dl/dd[9]").text_content()
-    place_birth = await page.locator("xpath=/html/body/main/div/div/div/div[1]/div/div[2]/dl/dd[10]").text_content()
+    driver = await page.locator("xpath=/html/body/div[1]/main/div/div/div[2]/div[1]/div/div/div[7]/div[2]/div[1]/h1/span[2]").text_content()
+    driver_number = await page.locator("xpath=/html/body/div[1]/main/div/div/div[2]/div[1]/div/div/div[7]/div[2]/div[1]/div/p[2]").text_content()
+    team = await page.locator("xpath=/html/body/div[1]/main/div/div/div[2]/div[1]/div/div/div[7]/div[2]/div[1]/div/p[1]").text_content()
+    driver_picture = await page.locator("xpath=/html/body/div[1]/main/div/div/div[2]/div[1]/div/div/div[4]/img").get_attribute("src")
+    country = await page.locator("xpath=/html/body/div[1]/main/div/div/div[2]/div[1]/div/div/div[7]/div[2]/div[1]/div/div/p").text_content()
+    podiums = await page.locator("xpath=/html/body/div[1]/main/div/div/div[2]/div[2]/div/div/div/div/div[1]/div/div[1]/dl[2]/div[6]/dd").text_content()
+    season_points = await page.locator("xpath=/html/body/div[1]/main/div/div/div[2]/div[2]/div/div/div/div/div[1]/div/div[1]/dl[1]/div[2]/dd").text_content()
+    career_points = await page.locator("xpath=/html/body/div[1]/main/div/div/div[2]/div[2]/div/div/div/div/div[3]/div/dl/div[2]/dd").text_content()
+    gp_entered = await page.locator("xpath=/html/body/div[1]/main/div/div/div[2]/div[2]/div/div/div/div/div[3]/div/dl/div[1]/dd").text_content()
+    world_championships = await page.locator("xpath=/html/body/div[1]/main/div/div/div[2]/div[2]/div/div/div/div/div[3]/div/dl/div[7]/dd").text_content()
+    highest_race_finish = await page.locator("xpath=/html/body/div[1]/main/div/div/div[2]/div[2]/div/div/div/div/div[3]/div/dl/div[3]/dd").text_content()
+    highest_grid_position = await page.locator("xpath=/html/body/div[1]/main/div/div/div[2]/div[2]/div/div/div/div/div[3]/div/dl/div[5]/dd").text_content()
+    date_birth = await page.locator("xpath=/html/body/div[1]/main/div/div/div[2]/div[3]/div/div/div/div[1]/div[2]/dl/div[1]/dd").text_content()
+    place_birth = await page.locator("xpath=/html/body/div[1]/main/div/div/div[2]/div[3]/div/div/div/div[1]/div[2]/dl/div[2]/dd").text_content()
 
     await page.close()
          
@@ -85,10 +88,11 @@ async def scrape_details(browser, driver_url, season_points):
         "driver": driver.strip() if driver else None,
         "driver_number": driver_number.strip() if driver_number else None,
         "team": team.strip() if team else None,
+        "driver_picture": driver_picture.strip() if driver_picture else None,
         "country": country.strip() if country else None,
         "podiums": int(podiums.strip()) if podiums and podiums.isdigit() else None,
         "season_points": float(season_points.strip()) if season_points else None,
-        "total_points": float(total_points.strip().replace(',', '')) if total_points else None,
+        "career_points": float(career_points.strip().replace(',', '')) if career_points else None,
         "gp_entered": int(gp_entered.strip()) if gp_entered and gp_entered.isdigit() else None,
         "world_championships": int(world_championships.strip()) if world_championships and world_championships.isdigit() else None,
         "highest_race_finish": highest_race_finish.strip() if highest_race_finish else None,

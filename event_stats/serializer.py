@@ -8,7 +8,7 @@ class EventSerializer(serializers.ModelSerializer):
             'id',
             "round",
             'event',
-            'çountry',
+            'country',
             'circuit',
             'city',
             'date',
