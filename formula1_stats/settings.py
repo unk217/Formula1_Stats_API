@@ -35,6 +35,9 @@ DEBUG = os.getenv("DEBUG", "False") == "True"
 ALLOWED_HOSTS = os.getenv("DJANGO_ALLOWED_HOSTS", "127.0.0.1,localhost").split(",")
 
 
+EXTERNAL_TIMEOUT = float(os.getenv("EXTERNAL_TIMEOUT", "10"))
+ERGAST_BASE = os.getenv("ERGAST_BASE", "https://api.jolpi.ca/ergast/f1")
+
 # Application definition
 
 BASE_APPS = [

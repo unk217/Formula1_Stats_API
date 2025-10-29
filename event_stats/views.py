@@ -1,10 +1,15 @@
-from rest_framework.viewsets import ModelViewSet
-from event_stats.serializer import EventSerializer
-from event_stats.models import Event
+import requests
+from rest_framework.decorators import api_view
+from rest_framework.response import Response
+from .serializer import RaceSerializer
 
-# Create your views here.
-class EventViewSet(ModelViewSet):
-    queryset = Event.objects.all()
-    serializer_class = EventSerializer
-    http_method_names = ['get']
-# This viewset provides the default `list`, `create`, `retrieve`, `update`, and `destroy` actions.
+
+@api_view(["GET"])
+def consume_api_externa(request):
+    api_url = "https://api.jolpi.ca/ergast/f1/2025/races/"
+    response = requests.get(api_url)
+    response.raise_for_status()
+
+    races = response.json().get("MRData", {}).get("RaceTable", {}).get("Races", [])
+    serializer = RaceSerializer(races, many=True)
+    return Response(serializer.data)
